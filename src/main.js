@@ -19,16 +19,29 @@ client.on('message', async msg => {
     if (!msg.guild.me.permissionsIn(msg.channel).has(Discord.Permissions.FLAGS.MANAGE_WEBHOOKS))
         return;
 
+    const userStr = parsed.reader.getString(true);
     const userId = parsed.reader.getUserID();
-    if (userId === null)
-        return;
 
-    const user = await client.users.fetch(userId);
+    let user = null
+    let member = null
+    if (userId != null)
+        user = await client.users.fetch(userId);
+    if (user == null) {
+        const members = await msg.guild.members.fetch();
+        member = members.find(e => e.user.tag === userStr);
+        if (member == null)
+            member = members.find(e => e.displayName === userStr);
+        if (member == null)
+            member = members.find(e => e.user.username === userStr);
+    }
+    if (user != null)
+        member = await msg.guild.members.resolve(user);
+    else if (member != null)
+        user = member.user;
     if (user === null)
         return;
     if (user.bot)
         return;
-    const member = await msg.guild.members.resolve(user);
 
     const message = parsed.reader.getRemaining()
     if (message === null)
