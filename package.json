@@ -13,9 +13,7 @@
     "config": "^3.3.3",
     "discord-command-parser": "^1.4.3",
     "discord.js": "^12.2.0",
-    "js-yaml": "^3.14.0",
-    "axios": "^0.21.0"
+    "js-yaml": "^3.14.0"
   },
-  "devDependencies": {
-  }
+  "devDependencies": {}
 }

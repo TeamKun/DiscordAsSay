@@ -1,7 +1,6 @@
 const Discord = require('discord.js');
 const Parser = require('discord-command-parser');
 const config = require('config');
-const axios = require('axios');
 
 const prefix = "/";
 const client = new Discord.Client();
@@ -17,8 +16,7 @@ client.on('message', async msg => {
     if (parsed.command !== 'as')
         return
 
-    const webhook = config.webhooks[msg.channel.id];
-    if (webhook === undefined)
+    if (!msg.guild.me.permissionsIn(msg.channel).has(Discord.Permissions.FLAGS.MANAGE_WEBHOOKS))
         return;
 
     const userId = parsed.reader.getUserID();
@@ -36,11 +34,15 @@ client.on('message', async msg => {
     if (message === null)
         return;
 
-    await axios.post(webhook, {
-        content: message,
-        username: member?.displayName ?? user.username,
-        avatar_url: user.avatarURL()
-    })
+    const hooks = await msg.channel.fetchWebhooks();
+    hooks.filter(e => e.name === 'AsSay').forEach(e => {
+        e.send({
+            content: message,
+            username: member?.displayName ?? user.username,
+            avatarURL: user.avatarURL(),
+            nonce: msg.id
+        });
+    });
 });
 
 client.login(config.token);
