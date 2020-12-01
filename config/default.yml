@@ -1,0 +1,4 @@
+# 発信するチャンネル (複数指定可)
+webhooks:
+  # DiscordチャンネルID: Webhook URL
+  "000000000000000000": "https://ptb.discordapp.com/api/webhooks/000000000000000000/XXXXXX"
