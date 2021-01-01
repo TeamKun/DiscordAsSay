@@ -46,7 +46,7 @@ module.exports = function (client) {
 
     async function ascopy(channel, argUrl) {
         if (!channel.guild.me.permissionsIn(channel).has(Discord.Permissions.FLAGS.MANAGE_WEBHOOKS))
-            return {ok: false, reason: "このチャンネルでは /ascopy は使用できません"}
+            return {ok: false, reason: "このチャンネルでは /ascopy は使用できません (Webhook権限の設定)"}
 
         const cUrl = argUrl
         if (cUrl === null)
@@ -82,7 +82,10 @@ module.exports = function (client) {
             })
         }
         const hooks = await channel.fetchWebhooks()
-        hooks.filter(e => e.name === 'AsSay').forEach(e => e.send(message))
+        const assayHooks = hooks.filter(e => e.name === 'AsSay')
+        if (assayHooks.size <= 0)
+            return {ok: false, reason: "このチャンネルでは /ascopy は使用できません (Webhookの設定)"}
+        assayHooks.forEach(e => e.send(message))
 
         return {ok: true}
     }
