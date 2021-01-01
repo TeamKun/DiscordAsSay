@@ -12,7 +12,7 @@
   "dependencies": {
     "config": "^3.3.3",
     "discord-command-parser": "^1.4.3",
-    "discord.js": "^12.2.0",
+    "discord.js": "^12.5.1",
     "js-yaml": "^3.14.0"
   },
   "devDependencies": {}

@@ -7,6 +7,44 @@ const client = new Discord.Client();
 
 client.on('ready', () => {
     console.log(`Logged in as ${client.user.tag}!`);
+
+    client.api.applications(client.user.id).commands.post({
+        data: {
+            name: "assay",
+            description: "他人になりすまして発言できます",
+            content: "AsSay",
+            options: [
+                {
+                    name: "username",
+                    description: "ID、表示名、名前、名前#タグ",
+                    type: 3,
+                    required: true,
+                },
+                {
+                    name: "user",
+                    description: "ユーザー",
+                    type: 6,
+                    required: true,
+                },
+            ],
+        }
+    });
+
+    client.ws.on('INTERACTION_CREATE', async interaction => {
+        const command = interaction.data.name.toLowerCase();
+        const args = interaction.data.options;
+
+        if (command === 'assay'){
+            client.api.interactions(interaction.id, interaction.token).callback.post({
+                data: {
+                    type: 4,
+                    data: {
+                        content: "hello world!!!"
+                    }
+                }
+            })
+        }
+    });
 });
 
 client.on('message', async msg => {
